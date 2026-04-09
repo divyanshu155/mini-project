@@ -1,0 +1,66 @@
+{% extends 'store/base.html' %}
+
+{% block title %}My Profile — VastraVerse{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="page-title">My Profile</h1>
+        <div class="profile-layout" style="display: flex; gap: 30px; flex-wrap: wrap;">
+            
+            <div class="profile-details" style="flex: 1; min-width: 300px; background: var(--bg-secondary, #f9f9f9); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color, #eee);">
+                <h2>Account Details</h2>
+                <div style="margin-top: 20px;">
+                    <p style="margin-bottom: 10px;"><strong>Username:</strong> {{ user.username }}</p>
+                    <p style="margin-bottom: 10px;"><strong>Email:</strong> {{ user.email }}</p>
+                    <p style="margin-bottom: 10px;"><strong>Date Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                </div>
+            </div>
+
+            <div class="profile-orders" style="flex: 2; min-width: 300px;">
+                <h2>Order History</h2>
+                {% if orders %}
+                <div class="table-responsive" style="overflow-x: auto; margin-top: 15px;">
+                    <table class="table" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border-color, #ddd); text-align: left;">
+                                <th style="padding: 12px 10px;">Order ID</th>
+                                <th style="padding: 12px 10px;">Date</th>
+                                <th style="padding: 12px 10px;">Items</th>
+                                <th style="padding: 12px 10px;">Total</th>
+                                <th style="padding: 12px 10px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr style="border-bottom: 1px solid var(--border-color, #eee);">
+                                <td style="padding: 12px 10px;">#{{ order.id }}</td>
+                                <td style="padding: 12px 10px;">{{ order.created_at|date:"M j, Y" }}</td>
+                                <td style="padding: 12px 10px;">
+                                    {{ order.items.count }} item(s)
+                                </td>
+                                <td style="padding: 12px 10px;">₹{{ order.total }}</td>
+                                <td style="padding: 12px 10px;">
+                                    {% if order.paid %}
+                                    <span style="color: #28a745; font-weight: 600;">Paid</span>
+                                    {% else %}
+                                    <span style="color: #ffc107; font-weight: 600;">Pending</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state" style="padding: 20px 0; text-align: left;">
+                    <p style="margin-bottom: 15px; color: #666;">You haven't placed any orders yet.</p>
+                    <a href="{% url 'store:home' %}" class="btn btn-primary">Start Shopping</a>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

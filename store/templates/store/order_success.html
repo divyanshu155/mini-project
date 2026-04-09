@@ -1,0 +1,49 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Order Confirmed — VastraVerse{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="success-page">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>Order Placed Successfully!</h1>
+            <p class="success-order-id">Order #{{ order.id }}</p>
+            <p class="success-msg">Thank you, <strong>{{ order.full_name }}</strong>! Your order has been received and
+                is being processed.</p>
+
+            <div class="order-details-card">
+                <h3>Order Details</h3>
+                <div class="order-info-grid">
+                    <div>
+                        <span class="label">Email</span>
+                        <span>{{ order.email }}</span>
+                    </div>
+                    <div>
+                        <span class="label">Shipping To</span>
+                        <span>{{ order.address }}, {{ order.city }} — {{ order.zip_code }}</span>
+                    </div>
+                    <div>
+                        <span class="label">Order Total</span>
+                        <span class="total-value">₹{{ order.total }}</span>
+                    </div>
+                </div>
+
+                <h4>Items</h4>
+                {% for item in order.items.all %}
+                <div class="order-item-row">
+                    <span>{{ item.product.name }} {% if item.size %}({{ item.size }}){% endif %} × {{ item.quantity }}</span>
+                    <span>₹{{ item.get_subtotal }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <a href="{% url 'store:home' %}" class="btn btn-primary btn-lg">
+                Continue Shopping <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

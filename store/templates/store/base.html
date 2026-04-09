@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VastraVerse{% endblock %}</title>
+    <meta name="description" content="VastraVerse — Premium fashion for everyone. Shop the latest trends in clothing.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'store/css/style.css' %}?v=1.1">
+    <script>
+        // Check for saved theme preference or system preference before adding elements to DOM
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container top-bar-inner">
+            <span><i class="fas fa-truck"></i> Free shipping on orders over ₹999</span>
+            <span><i class="fas fa-phone"></i> Support: +91 98765 43210</span>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-inner">
+            <a href="{% url 'store:home' %}" class="logo">
+                <span class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 1em; height: 1em; vertical-align: text-bottom;">
+                        <path d="M12 7V5a2 2 0 1 1 2-2"></path>
+                        <path d="M12 7L2.5 14.5a1 1 0 0 0-.5.5v1h20v-1a1 1 0 0 0-.5-.5L12 7z"></path>
+                    </svg>
+                </span> VastraVerse
+            </a>
+
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'store:home' %}" class="nav-link">Home</a>
+                {% for cat in categories %}
+                    <a href="{% url 'store:category_products' cat.slug %}" class="nav-link">{{ cat.name }}</a>
+                {% endfor %}
+            </div>
+
+            <div class="nav-actions">
+                <form action="{% url 'store:search' %}" method="GET" class="search-form" id="searchForm">
+                    <input type="text" name="q" placeholder="Search clothing..." class="search-input" id="searchInput">
+                    <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+                </form>
+
+                <a href="{% url 'store:wishlist' %}" class="cart-icon" id="wishlistIcon" title="Wishlist">
+                    <i class="fas fa-heart"></i>
+                </a>
+
+                <a href="{% url 'store:cart' %}" class="cart-icon" id="cartIcon">
+                    <i class="fas fa-shopping-bag"></i>
+                    {% if cart.get_item_count > 0 %}
+                        <span class="cart-count">{{ cart.get_item_count }}</span>
+                    {% endif %}
+                </a>
+
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+
+                {% if user.is_authenticated %}
+                    <div class="user-menu">
+                        <button class="user-btn"><i class="fas fa-user"></i> {{ user.username }}</button>
+                        <div class="user-dropdown">
+                            <a href="{% url 'store:profile' %}"><i class="fas fa-user-circle"></i> Profile</a>
+                            <a href="{% url 'store:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'store:login' %}" class="nav-auth-link">Sign In</a>
+                {% endif %}
+
+                <button class="mobile-toggle" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" id="msg-{{ forloop.counter }}">
+            <span>{{ message }}</span>
+            <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3 class="footer-brand"><span class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 1em; height: 1em; vertical-align: text-bottom;">
+                            <path d="M12 7V5a2 2 0 1 1 2-2"></path>
+                            <path d="M12 7L2.5 14.5a1 1 0 0 0-.5.5v1h20v-1a1 1 0 0 0-.5-.5L12 7z"></path>
+                        </svg>
+                    </span> VastraVerse</h3>
+                    <p class="footer-desc">Premium fashion for the modern individual. Quality meets style in every piece we curate.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="{% url 'store:home' %}">Shop All</a>
+                    {% for cat in categories %}
+                        <a href="{% url 'store:category_products' cat.slug %}">{{ cat.name }}</a>
+                    {% endfor %}
+                </div>
+                <div class="footer-col">
+                    <h4>Customer Care</h4>
+                    <a href="#">Shipping & Returns</a>
+                    <a href="#">Size Guide</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <p>Get 10% off your first order.</p>
+                    <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Subscribed ✓';">
+                        <input type="email" placeholder="Your email" class="newsletter-input">
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 VastraVerse. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'store/js/main.js' %}?v=1.1"></script>
+</body>
+</html>

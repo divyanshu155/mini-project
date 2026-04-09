@@ -1,0 +1,37 @@
+{% if products.has_other_pages %}
+<div class="pagination-container" style="margin-top: 40px; text-align: center;">
+    <ul class="pagination" style="display: inline-flex; list-style: none; padding: 0; gap: 5px;">
+        {% if products.has_previous %}
+        <li>
+            <a href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="btn btn-outline" style="padding: 8px 12px;">&laquo; Prev</a>
+        </li>
+        {% else %}
+        <li>
+            <span class="btn btn-outline disabled" style="padding: 8px 12px; opacity: 0.5; cursor: not-allowed;">&laquo; Prev</span>
+        </li>
+        {% endif %}
+
+        {% for i in products.paginator.page_range %}
+            {% if products.number == i %}
+            <li>
+                <span class="btn btn-primary" style="padding: 8px 14px;">{{ i }}</span>
+            </li>
+            {% else %}
+            <li>
+                <a href="?page={{ i }}{% if query %}&q={{ query }}{% endif %}" class="btn btn-outline" style="padding: 8px 14px;">{{ i }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if products.has_next %}
+        <li>
+            <a href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="btn btn-outline" style="padding: 8px 12px;">Next &raquo;</a>
+        </li>
+        {% else %}
+        <li>
+            <span class="btn btn-outline disabled" style="padding: 8px 12px; opacity: 0.5; cursor: not-allowed;">Next &raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}

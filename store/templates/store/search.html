@@ -1,0 +1,53 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Search: {{ query }} — VastraVerse{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="page-title">Search Results</h1>
+        {% if query %}
+        <p class="section-subtitle">Showing results for "<strong>{{ query }}</strong>"</p>
+        {% endif %}
+
+        {% if products %}
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'store:product_detail' product.slug %}" class="product-img-wrap">
+                    {% if product.image_url %}
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-img">
+                    {% else %}
+                    <div class="product-img product-placeholder"><i class="fas fa-tshirt"></i></div>
+                    {% endif %}
+                </a>
+                <div class="product-info">
+                    {% if product.category %}
+                    <span class="product-category">{{ product.category.name }}</span>
+                    {% endif %}
+                    <a href="{% url 'store:product_detail' product.slug %}" class="product-name">{{ product.name }}</a>
+                    <div class="product-price-row">
+                        <span class="product-price">₹{{ product.price }}</span>
+                        {% if product.stock > 0 %}
+                        <form method="POST" action="{% url 'store:add_to_cart' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-add-cart"><i class="fas fa-plus"></i></button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% include 'store/pagination.html' %}
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-search"></i>
+            <h3>No results found</h3>
+            <p>Try a different search term.</p>
+            <a href="{% url 'store:home' %}" class="btn btn-primary">Browse All</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

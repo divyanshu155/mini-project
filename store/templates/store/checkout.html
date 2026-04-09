@@ -1,0 +1,52 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Checkout — VastraVerse{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="page-title">Checkout</h1>
+
+        <div class="checkout-layout">
+            <div class="checkout-form-wrap">
+                <h2>Shipping Details</h2>
+                <form method="POST" class="checkout-form" id="checkoutForm">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <span class="field-error">{{ field.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-lock"></i> Place Order
+                    </button>
+                </form>
+            </div>
+
+            <div class="cart-summary checkout-summary">
+                <h3>Order Summary</h3>
+                {% for item in cart.items.all %}
+                <div class="checkout-item">
+                    <span>{{ item.product.name }} {% if item.size %}({{ item.size }}){% endif %} × {{ item.quantity }}</span>
+                    <span>₹{{ item.get_subtotal }}</span>
+                </div>
+                {% endfor %}
+                <div class="summary-divider"></div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span class="free-tag">FREE</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row summary-total">
+                    <span>Total</span>
+                    <span>₹{{ cart.get_total }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

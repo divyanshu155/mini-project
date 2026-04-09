@@ -1,0 +1,164 @@
+{% extends 'store/base.html' %}
+
+{% block title %}{{ product.name }} — VastraVerse{% endblock %}
+
+{% block content %}
+<section class="section product-detail-section">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{% url 'store:home' %}">Home</a>
+            {% if product.category %}
+            <span>/</span>
+            <a href="{% url 'store:category_products' product.category.slug %}">{{ product.category.name }}</a>
+            {% endif %}
+            <span>/</span>
+            <span>{{ product.name }}</span>
+        </div>
+
+        <div class="product-detail">
+            <div class="product-detail-img">
+                {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                {% else %}
+                <div class="product-placeholder detail-placeholder">
+                    <i class="fas fa-tshirt"></i>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="product-detail-info">
+                {% if product.category %}
+                <span class="product-category">{{ product.category.name }}</span>
+                {% endif %}
+                <h1 class="detail-title">{{ product.name }}</h1>
+                <p class="detail-price">₹{{ product.price }}</p>
+
+                <div class="detail-description">
+                    <h3>Description</h3>
+                    <p>{{ product.description }}</p>
+                </div>
+
+                {% if product.stock > 0 %}
+                <div class="stock-info in-stock">
+                    <i class="fas fa-check-circle"></i>
+                    In Stock ({{ product.stock }} available)
+                </div>
+
+                <form method="POST" action="{% url 'store:add_to_cart' product.id %}" class="add-to-cart-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'store:product_detail' product.slug %}">
+
+                    <div class="size-selector">
+                        <label>Size:</label>
+                        <div class="size-options">
+                            <input type="radio" name="size" value="XS" id="size-xs"><label for="size-xs">XS</label>
+                            <input type="radio" name="size" value="S" id="size-s"><label for="size-s">S</label>
+                            <input type="radio" name="size" value="M" id="size-m" checked><label for="size-m">M</label>
+                            <input type="radio" name="size" value="L" id="size-l"><label for="size-l">L</label>
+                            <input type="radio" name="size" value="XL" id="size-xl"><label for="size-xl">XL</label>
+                            <input type="radio" name="size" value="XXL" id="size-xxl"><label for="size-xxl">XXL</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-shopping-bag"></i> Add to Cart
+                    </button>
+                </form>
+
+                {% if user.is_authenticated %}
+                <form method="POST" action="{% url 'store:toggle_wishlist' product.id %}" style="margin-top: 15px;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline btn-lg btn-block">
+                        <i class="fas fa-heart"></i> Add to Wishlist / Remove
+                    </button>
+                </form>
+                {% else %}
+                <div style="margin-top: 15px;">
+                    <a href="{% url 'store:login' %}?next={{ request.path }}" class="btn btn-outline btn-lg btn-block">
+                        <i class="fas fa-heart"></i> Login to Add to Wishlist
+                    </a>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="stock-info out-of-stock">
+                    <i class="fas fa-times-circle"></i>
+                    Out of Stock
+                </div>
+                {% endif %}
+
+                <div class="detail-features">
+                    <div class="detail-feature"><i class="fas fa-truck"></i> Free shipping over ₹999</div>
+                    <div class="detail-feature"><i class="fas fa-undo"></i> 30-day easy returns</div>
+                    <div class="detail-feature"><i class="fas fa-shield-alt"></i> Genuine product</div>
+                </div>
+            </div>
+        <div class="reviews-section" style="margin-top: 40px; margin-bottom: 40px;">
+            <h2 class="section-title">Customer Reviews</h2>
+            
+            {% if user.is_authenticated %}
+            <div class="review-form-box" style="margin-bottom: 30px; background: var(--bg-secondary, #f9f9f9); padding: 20px; border-radius: 8px;">
+                <h3>Write a Review</h3>
+                <form method="POST" action="{% url 'store:add_review' product.id %}">
+                    {% csrf_token %}
+                    <div style="margin-bottom: 10px;">
+                        <label>Rating:</label>
+                        <select name="rating" class="form-control" style="width: 100px; display: inline-block;">
+                            <option value="5">5 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="2">2 Stars</option>
+                            <option value="1">1 Star</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label>Comment:</label>
+                        <textarea name="comment" class="form-control" rows="3" style="width: 100%; border: 1px solid var(--border-color, #ddd); border-radius: 4px; padding: 10px;" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+            {% else %}
+            <p><a href="{% url 'store:login' %}?next={{ request.path }}">Log in</a> to write a review.</p>
+            {% endif %}
+
+            <div class="reviews-list">
+                {% if product.reviews.all %}
+                    {% for review in product.reviews.all %}
+                    <div class="review-item" style="border-bottom: 1px solid var(--border-color, #eee); padding: 15px 0;">
+                        <div style="font-weight: bold;">{{ review.user.username }} <span style="color: #ffb400;">{% for i in '12345'|make_list %}{% if forloop.counter <= review.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</span></div>
+                        <div style="color: #666; font-size: 0.9em; margin-bottom: 10px;">{{ review.created_at|date:"F j, Y" }}</div>
+                        <p>{{ review.comment }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No reviews yet. Be the first to review this product!</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if related_products %}
+        <div class="related-section">
+            <h2 class="section-title">You May Also Like</h2>
+            <div class="product-grid">
+                {% for product in related_products %}
+                <div class="product-card">
+                    <a href="{% url 'store:product_detail' product.slug %}" class="product-img-wrap">
+                        {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-img">
+                        {% else %}
+                        <div class="product-img product-placeholder"><i class="fas fa-tshirt"></i></div>
+                        {% endif %}
+                    </a>
+                    <div class="product-info">
+                        <a href="{% url 'store:product_detail' product.slug %}" class="product-name">{{ product.name
+                            }}</a>
+                        <span class="product-price">₹{{ product.price }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

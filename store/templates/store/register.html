@@ -1,0 +1,39 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Create Account — VastraVerse{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="auth-page">
+            <div class="auth-card">
+                <h1>Create Account</h1>
+                <p class="auth-subtitle">Join VastraVerse for exclusive offers</p>
+
+                <form method="POST" class="auth-form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <small class="field-help">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% if field.errors %}
+                        <span class="field-error">{{ field.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                        Create Account
+                    </button>
+                </form>
+
+                <p class="auth-link">
+                    Already have an account? <a href="{% url 'store:login' %}">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

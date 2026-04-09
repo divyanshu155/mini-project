@@ -1,0 +1,53 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Payment — VastraVerse{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container" style="max-width: 600px;">
+        <h1 class="page-title text-center">Secure Checkout</h1>
+        
+        <div class="payment-box" style="background: var(--bg-secondary, #f9f9f9); padding: 30px; border-radius: 8px; border: 1px solid var(--border-color, #eee);">
+            <div class="order-summary text-center" style="margin-bottom: 30px;">
+                <h3 style="color: #666; font-weight: normal; margin-bottom: 5px;">Payment Amount</h3>
+                <h2 style="font-size: 2.5rem; margin-top: 0;">₹{{ order.total }}</h2>
+                <p>Order #{{ order.id }}</p>
+            </div>
+            
+            <div class="dummy-card-form" style="margin-bottom: 30px;">
+                <h4 style="margin-bottom: 15px;">Credit/Debit Card</h4>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Card Number</label>
+                    <input type="text" class="form-control" value="**** **** **** 4242" disabled>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Expiry Date</label>
+                        <input type="text" class="form-control" value="12/28" disabled>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>CVV</label>
+                        <input type="text" class="form-control" value="***" disabled>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Cardholder Name</label>
+                    <input type="text" class="form-control" value="{{ order.full_name }}" disabled>
+                </div>
+                
+                <div style="margin-top: 20px; text-align: center; color: #666; font-size: 0.9em;">
+                    <i class="fas fa-info-circle"></i> This is a dummy payment process for demonstration purposes. No real transaction will occur.
+                </div>
+            </div>
+
+            <form method="POST" action="{% url 'store:dummy_payment' order.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-lg btn-block" style="font-size: 1.2rem;">
+                    Pay ₹{{ order.total }} Now <i class="fas fa-lock"></i>
+                </button>
+            </form>
+        </div>
+        
+    </div>
+</section>
+{% endblock %}
