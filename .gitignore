@@ -1,2 +1,29 @@
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# Environment
+venv/
+env/
+.env
+
+# Database
+db.sqlite3
+db.sqlite3-journal
+
+# Media
+media/
+
+# Static files
+# usually you wouldn't ignore static files in the repository if they are not collected but assuming typical django project
+# staticfiles/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
