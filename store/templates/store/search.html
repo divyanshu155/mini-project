@@ -1,6 +1,6 @@
 {% extends 'store/base.html' %}
 
-{% block title %}Search: {{ query }} — VastraVerse{% endblock %}
+{% block title %}Search: {{ query }} — THREADORY{% endblock %}
 
 {% block content %}
 <section class="section">
@@ -27,7 +27,7 @@
                     {% endif %}
                     <a href="{% url 'store:product_detail' product.slug %}" class="product-name">{{ product.name }}</a>
                     <div class="product-price-row">
-                        <span class="product-price">₹{{ product.price }}</span>
+                        {% if product.original_price and product.original_price > product.price %}<span class="product-price-original" style="text-decoration: line-through; color: var(--text-muted); font-size: 0.85em; margin-right: 6px;">₹{{ product.original_price }}</span>{% endif %}<span class="product-price">₹{{ product.price }}</span>
                         {% if product.stock > 0 %}
                         <form method="POST" action="{% url 'store:add_to_cart' product.id %}">
                             {% csrf_token %}

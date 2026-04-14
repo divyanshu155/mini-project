@@ -1,6 +1,6 @@
 {% extends 'store/base.html' %}
 
-{% block title %}VastraVerse — Shop Premium Fashion{% endblock %}
+{% block title %}THREADORY — Shop Premium Fashion{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -71,7 +71,7 @@
                     {% endif %}
                     <a href="{% url 'store:product_detail' product.slug %}" class="product-name">{{ product.name }}</a>
                     <div class="product-price-row">
-                        <span class="product-price">₹{{ product.price }}</span>
+                        {% if product.original_price and product.original_price > product.price %}<span class="product-price-original" style="text-decoration: line-through; color: var(--text-muted); font-size: 0.85em; margin-right: 6px;">₹{{ product.original_price }}</span>{% endif %}<span class="product-price">₹{{ product.price }}</span>
                         {% if product.stock > 0 %}
                         <form method="POST" action="{% url 'store:add_to_cart' product.id %}">
                             {% csrf_token %}
@@ -120,6 +120,38 @@
                 <div class="feature-icon"><i class="fas fa-headset"></i></div>
                 <h4>24/7 Support</h4>
                 <p>Dedicated help center</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Developers Section -->
+<section class="section team-section" style="background: var(--bg-warm);">
+    <div class="container">
+        <h2 class="section-title">Meet Our Creators</h2>
+        <p class="section-subtitle">The minds behind the THREADORY experience</p>
+        
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-avatar" style="--accent-color: #e94560;">
+                    <span>A</span>
+                </div>
+                <h3>Aman</h3>
+                <p>Frontend Developer</p>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar" style="--accent-color: #3b82f6;">
+                    <span>D</span>
+                </div>
+                <h3>Divyanshu</h3>
+                <p>Backend Developer</p>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar" style="--accent-color: #10b981;">
+                    <span>G</span>
+                </div>
+                <h3>Gaurav</h3>
+                <p>Database Engineer</p>
             </div>
         </div>
     </div>

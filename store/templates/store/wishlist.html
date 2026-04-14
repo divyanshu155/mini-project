@@ -1,6 +1,6 @@
 {% extends 'store/base.html' %}
 
-{% block title %}Your Wishlist — VastraVerse{% endblock %}
+{% block title %}Your Wishlist — THREADORY{% endblock %}
 
 {% block content %}
 <section class="section">
@@ -24,7 +24,7 @@
                     {% endif %}
                     <a href="{% url 'store:product_detail' item.product.slug %}" class="product-name">{{ item.product.name }}</a>
                     <div class="product-price-row">
-                        <span class="product-price">₹{{ item.product.price }}</span>
+                        {% if item.product.original_price and item.product.original_price > item.product.price %}<span class="product-price-original" style="text-decoration: line-through; color: var(--text-muted); font-size: 0.85em; margin-right: 6px;">₹{{ item.product.original_price }}</span>{% endif %}<span class="product-price">₹{{ item.product.price }}</span>
                         <div style="display: flex; gap: 10px;">
                             <form method="POST" action="{% url 'store:add_to_cart' item.product.id %}">
                                 {% csrf_token %}

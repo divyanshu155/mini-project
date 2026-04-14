@@ -1,5 +1,5 @@
 /* =============================================
-   VastraVerse — Premium E-Commerce Stylesheet
+   THREADORY — Premium E-Commerce Stylesheet
    ============================================= */
 
 /* ---------- CSS Variables ---------- */
@@ -58,7 +58,11 @@
 [data-theme="dark"] .logo, 
 [data-theme="dark"] .section-title, 
 [data-theme="dark"] .page-title,
-[data-theme="dark"] .footer-brand {
+[data-theme="dark"] .footer-brand,
+[data-theme="dark"] .product-price,
+[data-theme="dark"] .cart-item-subtotal,
+[data-theme="dark"] .cart-summary h3,
+[data-theme="dark"] .detail-title {
     color: #ffffff;
 }
 
@@ -2351,4 +2355,126 @@ textarea.form-input {
 [data-theme="dark"] .auth-card {
     background: var(--bg-card);
     border-color: var(--border);
+}
+
+/* ---------- Team Section ---------- */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.team-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 36px 24px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-spring);
+    position: relative;
+    overflow: hidden;
+}
+
+.team-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow);
+    border-color: transparent;
+}
+
+.team-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    padding: 2px;
+    background: linear-gradient(135deg, var(--accent), var(--gold));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: var(--transition);
+    pointer-events: none;
+}
+
+.team-card:hover::after {
+    opacity: 1;
+}
+
+.team-avatar {
+    width: 86px;
+    height: 86px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-color, var(--accent)), var(--primary-mid));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.team-card h3 {
+    font-size: 1.35rem;
+    color: var(--text);
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.team-card p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* ---------- Hover Image Flip ---------- */
+.product-img-wrap {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.hover-image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.hover-image-container .img-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 2;
+    pointer-events: none; /* Prevent back image from capturing hover separately */
+}
+
+.hover-image-container .img-front {
+    transition: opacity 0.5s ease-in-out;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    display: block;
+}
+
+/* Strictly target the product card wrapper hover */
+.product-card:hover .hover-image-container .img-back {
+    opacity: 1 !important;
+}
+
+.product-card:hover .hover-image-container .img-front {
+    opacity: 0 !important;
 }

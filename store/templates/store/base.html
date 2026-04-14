@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}VastraVerse{% endblock %}</title>
-    <meta name="description" content="VastraVerse — Premium fashion for everyone. Shop the latest trends in clothing.">
+    <title>{% block title %}THREADORY{% endblock %}</title>
+    <meta name="description" content="THREADORY — Premium fashion for everyone. Shop the latest trends in clothing.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'store/css/style.css' %}?v=1.1">
+    <link rel="stylesheet" href="{% static 'store/css/style.css' %}?v=1.4">
     <script>
         // Check for saved theme preference or system preference before adding elements to DOM
         const savedTheme = localStorage.getItem('theme');
@@ -31,20 +31,26 @@
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <div class="container nav-inner">
-            <a href="{% url 'store:home' %}" class="logo">
-                <span class="logo-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 1em; height: 1em; vertical-align: text-bottom;">
-                        <path d="M12 7V5a2 2 0 1 1 2-2"></path>
-                        <path d="M12 7L2.5 14.5a1 1 0 0 0-.5.5v1h20v-1a1 1 0 0 0-.5-.5L12 7z"></path>
-                    </svg>
-                </span> VastraVerse
+            <a href="{% url 'store:home' %}" class="logo" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 28px; height: 28px;">
+                    <path d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"/>
+                </svg>
+                <span class="brand-text" style="font-weight: 800; font-size: 1.5rem; letter-spacing: 2px;">THREADORY</span>
             </a>
 
-            <div class="nav-links" id="navLinks">
+            <div class="nav-links" id="navLinks" style="display: flex; align-items: center; gap: 8px;">
                 <a href="{% url 'store:home' %}" class="nav-link">Home</a>
-                {% for cat in categories %}
-                    <a href="{% url 'store:category_products' cat.slug %}" class="nav-link">{{ cat.name }}</a>
-                {% endfor %}
+                <div class="user-menu" style="display: flex; align-items: center;">
+                    <span class="nav-link" style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        Categories <i class="fas fa-chevron-down" style="font-size: 0.7em; opacity: 0.7;"></i>
+                    </span>
+                    <div class="user-dropdown" style="left: 0; right: auto; top: calc(100% + 15px); min-width: 220px; z-index: 1000;">
+                        <a href="{% url 'store:home' %}"><i class="fas fa-th-large"></i> All Products</a>
+                        {% for cat in categories %}
+                            <a href="{% url 'store:category_products' cat.slug %}"><i class="fas fa-angle-right" style="font-size: 0.8em; opacity: 0.5;"></i> {{ cat.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
             <div class="nav-actions">
@@ -109,12 +115,12 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
-                    <h3 class="footer-brand"><span class="logo-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 1em; height: 1em; vertical-align: text-bottom;">
-                            <path d="M12 7V5a2 2 0 1 1 2-2"></path>
-                            <path d="M12 7L2.5 14.5a1 1 0 0 0-.5.5v1h20v-1a1 1 0 0 0-.5-.5L12 7z"></path>
+                    <h3 class="footer-brand" style="display: flex; align-items: center; gap: 8px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
+                            <path d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"/>
                         </svg>
-                    </span> VastraVerse</h3>
+                        <span style="font-weight: 800; letter-spacing: 1px;">THREADORY</span>
+                    </h3>
                     <p class="footer-desc">Premium fashion for the modern individual. Quality meets style in every piece we curate.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-instagram"></i></a>
@@ -147,11 +153,11 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 VastraVerse. All rights reserved.</p>
+                <p>&copy; 2026 THREADORY. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="{% static 'store/js/main.js' %}?v=1.1"></script>
+    <script src="{% static 'store/js/main.js' %}?v=1.4"></script>
 </body>
 </html>

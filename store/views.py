@@ -1,11 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.conf import settings
 from django.core.paginator import Paginator
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Product, Category, Cart, CartItem, Order, OrderItem, Wishlist, Review
-from .forms import CheckoutForm, RegisterForm
+from .forms import CheckoutForm, RegisterForm, UserEditForm
+import stripe
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def _get_cart(request):
@@ -244,15 +249,55 @@ def profile_view(request):
     }
     return render(request, 'store/profile.html', context)
 
+@login_required(login_url='store:login')
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserEditForm(instance=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('store:profile')
+    else:
+        form = UserEditForm(instance=request.user)
+    
+    cart = _get_cart(request)
+    return render(request, 'store/edit_profile.html', {'form': form, 'cart': cart})
+
 def dummy_payment(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    if request.method == 'POST':
-        # Simulate payment success
-        order.paid = True
-        order.save()
-        messages.success(request, 'Payment of ₹{} was successful!'.format(order.total))
-        return redirect('store:order_success', order_id=order.id)
     return render(request, 'store/dummy_payment.html', {'order': order})
 
+def create_checkout_session(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    domain_url = request.build_absolute_uri('/')[:-1]
+    
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'inr',
+                    'unit_amount': int(order.total * 100),
+                    'product_data': {
+                        'name': f'Threadory Order #{order.id}',
+                    },
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url=domain_url + reverse('store:stripe_success', kwargs={'order_id': order.id}),
+            cancel_url=domain_url + reverse('store:dummy_payment', kwargs={'order_id': order.id}),
+        )
+        return redirect(checkout_session.url, code=303)
+    except Exception as e:
+        messages.error(request, f"Stripe error: {str(e)}")
+        return redirect('store:dummy_payment', order_id=order.id)
+
+def stripe_success(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    order.paid = True
+    order.save()
+    messages.success(request, f'Payment of ₹{order.total} via Stripe was successful!')
+    return redirect('store:order_success', order_id=order.id)
 
 

@@ -21,4 +21,7 @@ urlpatterns = [
     path('wishlist/toggle/<int:product_id>/', views.toggle_wishlist, name='toggle_wishlist'),
     path('product/<int:product_id>/review/', views.add_review, name='add_review'),
     path('profile/', views.profile_view, name='profile'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('create-checkout-session/<int:order_id>/', views.create_checkout_session, name='create_checkout_session'),
+    path('stripe-success/<int:order_id>/', views.stripe_success, name='stripe_success'),
 ]

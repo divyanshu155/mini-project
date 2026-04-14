@@ -40,3 +40,17 @@ class RegisterForm(UserCreationForm):
                 'class': 'form-input',
                 'placeholder': self.fields[field_name].label or field_name.title()
             })
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs.update({
+                'class': 'form-control',
+                'placeholder': self.fields[field_name].label or field_name.title()
+            })
+

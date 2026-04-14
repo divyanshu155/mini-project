@@ -1,5 +1,5 @@
 // =============================================
-// VastraVerse — Enhanced JavaScript
+// THREADORY — Enhanced JavaScript
 // =============================================
 
 document.addEventListener('DOMContentLoaded', () => {
