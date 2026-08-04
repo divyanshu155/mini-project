@@ -85,21 +85,37 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 
+import shutil
+
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-# Use PostgreSQL in production if DATABASE_URL environment variable is set
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL and dj_database_url:
     ssl_require = os.environ.get('DATABASE_SSL_REQUIRE', 'False') == 'True'
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=ssl_require)
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600, ssl_require=ssl_require)
+    }
+else:
+    db_path = BASE_DIR / 'db.sqlite3'
+    tmp_db = Path('/tmp/db.sqlite3')
+    if os.environ.get('VERCEL') or not os.access(BASE_DIR, os.W_OK):
+        if db_path.exists() and not tmp_db.exists():
+            try:
+                shutil.copyfile(db_path, tmp_db)
+            except Exception:
+                pass
+        target_db = tmp_db if tmp_db.exists() else db_path
+    else:
+        target_db = db_path
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': target_db,
+        }
+    }
+
 
 
 # Password validation

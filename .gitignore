@@ -9,8 +9,9 @@ env/
 .env
 
 # Database
-db.sqlite3
+# db.sqlite3
 # db.sqlite3-journal
+
 
 # Media
 # media/ # Commented out to include uploaded images in submission
