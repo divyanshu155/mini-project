@@ -35,7 +35,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-1t7k&xxv)n5yt!x#2899y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,.railway.app,.onrender.com').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,.railway.app,.onrender.com,.vercel.app,*').split(',')
 # Allow Render's internal/external URLs
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
@@ -140,10 +140,10 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = []
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Enable WhiteNoise's storage for compression and caching if whitenoise is installed
+# Enable WhiteNoise's storage for compression if whitenoise is installed
 try:
     import whitenoise
-    staticfiles_backend = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    staticfiles_backend = "whitenoise.storage.CompressedStaticFilesStorage"
 except ImportError:
     staticfiles_backend = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
