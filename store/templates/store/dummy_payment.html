@@ -23,24 +23,14 @@
                 </div>
             </div>
 
-            <form method="POST" action="{% url 'store:create_checkout_session' order.id %}" style="margin-bottom: 15px;">
+            <form method="POST" action="{% url 'store:create_checkout_session' order.id %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-primary btn-lg btn-block" style="font-size: 1.1rem; background-color: #5469d4; border-color: #5469d4; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <i class="fab fa-stripe"></i> Pay ₹{{ order.total }} with Stripe
                 </button>
             </form>
-
-            <form method="POST" action="{% url 'store:mark_as_paid' order.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-secondary btn-block" style="font-size: 1rem; width: 100%; opacity: 0.9;">
-                    <i class="fas fa-check-circle"></i> Complete Order (Simulate / Demo Payment)
-                </button>
-            </form>
         </div>
-        
-        <p class="text-center" style="margin-top: 20px; font-size: 0.85em; color: #888;">
-            <i class="fas fa-key"></i> <strong>Note:</strong> To test real Stripe Checkout, replace <code>STRIPE_SECRET_KEY</code> in your <code>.env</code> file with your Stripe test key (starting with <code>sk_test_...</code>).
-        </p>
     </div>
 </section>
 {% endblock %}
+
